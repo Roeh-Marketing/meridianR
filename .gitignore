@@ -13,3 +13,10 @@ docs/
 vignettes/*.html
 meridian_summary.html
 docs
+
+# Secrets — never commit. API keys live in ~/.Renviron, outside the repo.
+.Renviron
+.Rprofile
+.env
+*.pem
+*.key
