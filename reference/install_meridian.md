@@ -36,7 +36,7 @@ install_meridian(
   experimental `"jax"` backend. The JAX backend pulls in the
   `google-meridian[jax]` extra and is recorded as the default backend
   for future sessions (see
-  [`use_backend()`](https://bdshaff.github.io/meridianR/reference/use_backend.md)).
+  [`use_backend()`](https://roeh-marketing.github.io/meridianR/reference/use_backend.md)).
 
 - gpu:
 

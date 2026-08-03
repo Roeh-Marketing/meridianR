@@ -2,7 +2,7 @@
 
 Thin, backend-aware wrappers over Meridian's TensorFlow-Probability
 distributions (`meridian$backend$tfd`), for use inside
-[`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md).
+[`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md).
 They return a Python distribution object.
 
 ## Usage
@@ -39,4 +39,4 @@ A TensorFlow-Probability distribution (a Python object).
 
 ## See also
 
-[`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md)
+[`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md)

@@ -2,7 +2,7 @@
 
 `prior_distribution()` builds Meridian's `PriorDistribution`, the
 container of priors used by a
-[`model_spec()`](https://bdshaff.github.io/meridianR/reference/model_spec.md).
+[`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md).
 Supply named priors built with the `prior_*()` distribution
 constructors; anything you omit keeps Meridian's default. The most
 commonly customized priors are the ROI priors `roi_m` (media) and
@@ -34,9 +34,9 @@ including: `roi_m`, `roi_rf`, `mroi_m`, `mroi_rf`, `contribution_m`,
 
 ## See also
 
-[`prior_lognormal()`](https://bdshaff.github.io/meridianR/reference/prior_constructors.md)
+[`prior_lognormal()`](https://roeh-marketing.github.io/meridianR/reference/prior_constructors.md)
 and friends for the distribution constructors;
-[`model_spec()`](https://bdshaff.github.io/meridianR/reference/model_spec.md)
+[`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md)
 to attach the priors to a model configuration.
 
 ## Examples

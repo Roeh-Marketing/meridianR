@@ -21,7 +21,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="R Interface to Google Meridian (Marketing Mix Modeling)">
 <meta name="description" content="An R interface to Googles Meridian Bayesian Marketing Mix Modeling (MMM) library. Wraps the Meridian Python package via reticulate', providing faithful bindings to its data, model, and analysis objects together with an idiomatic R layer for loading data, configuring priors and model specifications, fitting models, and analyzing results.">
 <meta property="og:description" content="An R interface to Googles Meridian Bayesian Marketing Mix Modeling (MMM) library. Wraps the Meridian Python package via reticulate', providing faithful bindings to its data, model, and analysis objects together with an idiomatic R layer for loading data, configuring priors and model specifications, fitting models, and analyzing results.">
-<meta property="og:image" content="https://bdshaff.github.io/meridianR/logo.png">
+<meta property="og:image" content="https://roeh-marketing.github.io/meridianR/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -54,7 +54,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/bdshaff/meridianR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/Roeh-Marketing/meridianR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
@@ -84,10 +84,10 @@
 <p>Install the development version from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"bdshaff/meridianR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Roeh-Marketing/meridianR"</span><span class="op">)</span></span></code></pre></div>
 <p>Then provision the Python side (TensorFlow / TF-Probability) once:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bdshaff/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/install_meridian.html">install_meridian</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><code>install_meridian(gpu = TRUE)</code> installs the CUDA build; <code>install_meridian(backend = "jax")</code> uses the experimental JAX backend. If you skip this step, reticulate provisions an environment automatically on first use.</p>
 </div>
@@ -95,7 +95,7 @@
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bdshaff/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 1. Assemble input data from a long-format data frame</span></span>
 <span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_meridian_input.html">as_meridian_input</a></span><span class="op">(</span></span>
@@ -135,7 +135,7 @@ of Python (...) has already been initialized.</code></pre>
 <p>In a <strong>fresh session</strong>, as the first line:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_virtualenv</a></span><span class="op">(</span><span class="st">"r-meridian"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bdshaff/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span></code></pre></div>
 </li>
 </ul>
 <p>meridianR warns at load time when <code>RETICULATE_PYTHON</code> points elsewhere.</p>
@@ -155,8 +155,8 @@ of Python (...) has already been initialized.</code></pre>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/bdshaff/meridianR/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/bdshaff/meridianR/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/Roeh-Marketing/meridianR/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/Roeh-Marketing/meridianR/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -194,7 +194,7 @@ of Python (...) has already been initialized.</code></pre>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

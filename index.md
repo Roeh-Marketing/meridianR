@@ -17,7 +17,7 @@ Install the development version from GitHub:
 ``` r
 
 # install.packages("pak")
-pak::pak("bdshaff/meridianR")
+pak::pak("Roeh-Marketing/meridianR")
 ```
 
 Then provision the Python side (TensorFlow / TF-Probability) once:
@@ -65,7 +65,7 @@ summary(mmm)
 ```
 
 See
-[`vignette("getting-started")`](https://bdshaff.github.io/meridianR/articles/getting-started.md)
+[`vignette("getting-started")`](https://roeh-marketing.github.io/meridianR/articles/getting-started.md)
 for the full walkthrough.
 
 ## Choosing the Python environment

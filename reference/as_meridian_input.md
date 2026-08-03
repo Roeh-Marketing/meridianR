@@ -3,7 +3,7 @@
 `as_meridian_input()` is the primary, one-call way to turn a long-format
 R data frame into a Meridian `InputData` object. It drives Meridian's
 `DataFrameInputDataBuilder` (see
-[`input_data_builder()`](https://bdshaff.github.io/meridianR/reference/input_data_builder.md))
+[`input_data_builder()`](https://roeh-marketing.github.io/meridianR/reference/input_data_builder.md))
 under the hood, adding only the components you supply.
 
 ## Usage
@@ -119,9 +119,9 @@ the spend column names; pass `media_channels` for nicer labels.
 
 ## See also
 
-[`input_data_builder()`](https://bdshaff.github.io/meridianR/reference/input_data_builder.md)
+[`input_data_builder()`](https://roeh-marketing.github.io/meridianR/reference/input_data_builder.md)
 for the step-by-step builder, and
-[`meridian_model()`](https://bdshaff.github.io/meridianR/reference/meridian_model.md)
+[`meridian_model()`](https://roeh-marketing.github.io/meridianR/reference/meridian_model.md)
 to fit a model on the result.
 
 ## Examples

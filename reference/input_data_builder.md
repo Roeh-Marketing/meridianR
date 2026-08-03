@@ -4,7 +4,7 @@
 and the `with_*()` verbs add each data component from one or more R data
 frames. Finish the chain with `build_input_data()`. This is the
 flexible, pipe- friendly path; for the common case,
-[`as_meridian_input()`](https://bdshaff.github.io/meridianR/reference/as_meridian_input.md)
+[`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md)
 wraps the whole chain in a single call.
 
 ## Usage
@@ -161,5 +161,5 @@ native pipe:
 
 ## See also
 
-[`as_meridian_input()`](https://bdshaff.github.io/meridianR/reference/as_meridian_input.md)
+[`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md)
 for the one-call interface.

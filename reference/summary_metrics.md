@@ -23,7 +23,7 @@ summary_metrics(
 - model:
 
   A fitted `meridian_model` or a
-  [`analyzer()`](https://bdshaff.github.io/meridianR/reference/analyzer.md).
+  [`analyzer()`](https://roeh-marketing.github.io/meridianR/reference/analyzer.md).
 
 - confidence_level:
 
@@ -51,9 +51,9 @@ and one column per metric (`roi`, `mroi`, `incremental_outcome`,
 ## See also
 
 Other analysis accessors:
-[`adstock_decay()`](https://bdshaff.github.io/meridianR/reference/adstock_decay.md),
-[`expected_vs_actual()`](https://bdshaff.github.io/meridianR/reference/expected_vs_actual.md),
-[`hill_curves()`](https://bdshaff.github.io/meridianR/reference/hill_curves.md),
-[`predictive_accuracy()`](https://bdshaff.github.io/meridianR/reference/predictive_accuracy.md),
-[`response_curves()`](https://bdshaff.github.io/meridianR/reference/response_curves.md),
-[`rhat_summary()`](https://bdshaff.github.io/meridianR/reference/rhat_summary.md)
+[`adstock_decay()`](https://roeh-marketing.github.io/meridianR/reference/adstock_decay.md),
+[`expected_vs_actual()`](https://roeh-marketing.github.io/meridianR/reference/expected_vs_actual.md),
+[`hill_curves()`](https://roeh-marketing.github.io/meridianR/reference/hill_curves.md),
+[`predictive_accuracy()`](https://roeh-marketing.github.io/meridianR/reference/predictive_accuracy.md),
+[`response_curves()`](https://roeh-marketing.github.io/meridianR/reference/response_curves.md),
+[`rhat_summary()`](https://roeh-marketing.github.io/meridianR/reference/rhat_summary.md)

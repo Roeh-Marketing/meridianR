@@ -28,7 +28,7 @@ sample_posterior(
 - model:
 
   A `meridian_model` from
-  [`meridian_model()`](https://bdshaff.github.io/meridianR/reference/meridian_model.md).
+  [`meridian_model()`](https://roeh-marketing.github.io/meridianR/reference/meridian_model.md).
 
 - n_draws:
 
@@ -58,5 +58,5 @@ The (modified) `meridian_model`, invisibly.
 
 ## See also
 
-[`meridian_model()`](https://bdshaff.github.io/meridianR/reference/meridian_model.md),
+[`meridian_model()`](https://roeh-marketing.github.io/meridianR/reference/meridian_model.md),
 [`fit()`](https://generics.r-lib.org/reference/fit.html)

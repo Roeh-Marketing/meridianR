@@ -26,7 +26,7 @@ A Python module proxy (an object of class `python.builtin.module`).
 
 The module is imported lazily. The first time you touch `meridian$...`,
 reticulate initializes Python (provisioning an environment via
-[`install_meridian()`](https://bdshaff.github.io/meridianR/reference/install_meridian.md)
+[`install_meridian()`](https://roeh-marketing.github.io/meridianR/reference/install_meridian.md)
 or
 [`reticulate::py_require()`](https://rstudio.github.io/reticulate/reference/py_require.html)
 if needed).

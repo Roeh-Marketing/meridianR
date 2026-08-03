@@ -1,7 +1,7 @@
 # Analyzing a fitted model
 
 Once a model is fit (see
-[`vignette("getting-started")`](https://bdshaff.github.io/meridianR/articles/getting-started.md)),
+[`vignette("getting-started")`](https://roeh-marketing.github.io/meridianR/articles/getting-started.md)),
 meridianR turns Meridian’s results into tidy tibbles and ggplot2 charts.
 
 ``` r
@@ -27,7 +27,7 @@ fit(mmm, n_chains = 4, n_keep = 1000)
 
 Every accessor returns a tibble, so results flow straight into dplyr,
 ggplot2, or `gt`.
-[`summary_metrics()`](https://bdshaff.github.io/meridianR/reference/summary_metrics.md)
+[`summary_metrics()`](https://roeh-marketing.github.io/meridianR/reference/summary_metrics.md)
 gives per-channel ROI, marginal ROI, incremental outcome, contribution
 share, effectiveness, and CPIK for the prior and posterior:
 
@@ -53,7 +53,7 @@ predictive_accuracy(mmm)  # R-squared, MAPE, wMAPE
 ```
 
 Reuse one
-[`analyzer()`](https://bdshaff.github.io/meridianR/reference/analyzer.md)
+[`analyzer()`](https://roeh-marketing.github.io/meridianR/reference/analyzer.md)
 across several calls to avoid repeated setup:
 
 ``` r
@@ -96,7 +96,7 @@ plot(mmm, type = "fit")
 ## Meridian’s built-in report
 
 If you would rather have Meridian’s own two-page HTML summary,
-[`model_report()`](https://bdshaff.github.io/meridianR/reference/model_report.md)
+[`model_report()`](https://roeh-marketing.github.io/meridianR/reference/model_report.md)
 is an escape hatch:
 
 ``` r

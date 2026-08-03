@@ -2,11 +2,11 @@
 
 `meridian_model()` constructs Meridian's `Meridian` model object from
 input data and an optional
-[`model_spec()`](https://bdshaff.github.io/meridianR/reference/model_spec.md).
+[`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md).
 The model is *unfit* until you draw from the prior and posterior with
-[`sample_prior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md)
+[`sample_prior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md)
 and
-[`sample_posterior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md)
+[`sample_posterior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md)
 (or the [`fit()`](https://generics.r-lib.org/reference/fit.html)
 convenience).
 
@@ -21,12 +21,12 @@ meridian_model(input, spec = NULL, ...)
 - input:
 
   A `meridian_input_data` from
-  [`as_meridian_input()`](https://bdshaff.github.io/meridianR/reference/as_meridian_input.md).
+  [`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md).
 
 - spec:
 
   A `meridian_model_spec` from
-  [`model_spec()`](https://bdshaff.github.io/meridianR/reference/model_spec.md).
+  [`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md).
   When `NULL`, Meridian's default specification is used.
 
 - ...:
@@ -40,8 +40,8 @@ A `meridian_model` object.
 
 ## See also
 
-[`sample_prior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md),
-[`sample_posterior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md),
+[`sample_prior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md),
+[`sample_posterior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md),
 [`fit()`](https://generics.r-lib.org/reference/fit.html)
 
 ## Examples

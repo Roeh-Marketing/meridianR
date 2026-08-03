@@ -4,7 +4,7 @@
 adstock/lag structure, saturation, media-effect distribution, prior
 types, spline knots, and calibration. Any argument left `NULL` uses
 Meridian's own default. Attach custom priors by passing a
-[`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md)
+[`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md)
 to `prior`.
 
 ## Usage
@@ -32,7 +32,7 @@ model_spec(
 - prior:
 
   A `meridian_prior` from
-  [`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md).
+  [`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md).
 
 - media_effects_dist:
 
@@ -91,8 +91,8 @@ A `meridian_model_spec` object.
 
 ## See also
 
-[`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md),
-[`meridian_model()`](https://bdshaff.github.io/meridianR/reference/meridian_model.md)
+[`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md),
+[`meridian_model()`](https://roeh-marketing.github.io/meridianR/reference/meridian_model.md)
 
 ## Examples
 

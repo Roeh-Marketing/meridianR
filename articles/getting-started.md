@@ -32,7 +32,7 @@ Use `install_meridian(gpu = TRUE)` for the CUDA build or
 
 Meridian expects long-format data: one row per geo-by-time, with columns
 for the KPI, population, media spend, and any controls.
-[`as_meridian_input()`](https://bdshaff.github.io/meridianR/reference/as_meridian_input.md)
+[`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md)
 turns such a data frame into a Meridian `InputData` object.
 
 ``` r
@@ -73,7 +73,7 @@ input <- input_data_builder("non_revenue", geo = "region", time = "week") |>
 
 ## Configure priors and the model specification
 
-[`model_spec()`](https://bdshaff.github.io/meridianR/reference/model_spec.md)
+[`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md)
 controls the adstock/lag, saturation, and priors. Meridian’s defaults
 are well chosen, so a minimal spec is often all you need:
 
@@ -87,7 +87,7 @@ spec
 not supply `revenue_per_kpi`, so Meridian places a prior on each
 channel’s *total media contribution* by default – no per-channel
 calibration needed. You can override priors with
-[`prior_distribution()`](https://bdshaff.github.io/meridianR/reference/prior_distribution.md)
+[`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md)
 and the `prior_*()` constructors, but they must match your KPI’s scale.
 In particular, an ROI prior such as `prior_lognormal(0.2, 0.9)` (median
 ROI ~ 1.2) describes a **revenue** KPI, where ROI is dollars per dollar.
@@ -123,8 +123,8 @@ summary(mmm)
 
 Sampling **modifies the model in place** (draws are stored on the
 model’s ArviZ `inference_data`), so
-[`sample_prior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md),
-[`sample_posterior()`](https://bdshaff.github.io/meridianR/reference/sample_prior.md),
+[`sample_prior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md),
+[`sample_posterior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md),
 and [`fit()`](https://generics.r-lib.org/reference/fit.html) all return
 the same model object.
 

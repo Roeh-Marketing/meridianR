@@ -10,9 +10,11 @@ and model specifications, fitting models, and analyzing results.
 
 Useful links:
 
-- <https://github.com/bdshaff/meridianR>
+- <https://github.com/Roeh-Marketing/meridianR>
 
-- Report bugs at <https://github.com/bdshaff/meridianR/issues>
+- <https://roeh-marketing.github.io/meridianR/>
+
+- Report bugs at <https://github.com/Roeh-Marketing/meridianR/issues>
 
 ## Author
 

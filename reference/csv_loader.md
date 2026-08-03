@@ -2,7 +2,7 @@
 
 Faithful bindings to Meridian's `CsvDataLoader` and
 `DataFrameDataLoader`. They return a loader object; call
-[`load_input_data()`](https://bdshaff.github.io/meridianR/reference/load_input_data.md)
+[`load_input_data()`](https://roeh-marketing.github.io/meridianR/reference/load_input_data.md)
 to produce the `meridian_input_data`.
 
 ## Usage
@@ -44,7 +44,7 @@ data_frame_loader(
 - coord_to_columns:
 
   A
-  [`coord_to_columns()`](https://bdshaff.github.io/meridianR/reference/coord_to_columns.md)
+  [`coord_to_columns()`](https://roeh-marketing.github.io/meridianR/reference/coord_to_columns.md)
   mapping.
 
 - kpi_type:
@@ -67,5 +67,5 @@ A `meridian_data_loader` object.
 
 ## See also
 
-[`load_input_data()`](https://bdshaff.github.io/meridianR/reference/load_input_data.md),
-[`as_meridian_input()`](https://bdshaff.github.io/meridianR/reference/as_meridian_input.md)
+[`load_input_data()`](https://roeh-marketing.github.io/meridianR/reference/load_input_data.md),
+[`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md)

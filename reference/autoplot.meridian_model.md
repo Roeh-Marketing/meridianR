@@ -5,9 +5,9 @@ builds a ggplot for a fitted model, and
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws it. The
 `type` argument selects which chart, dispatching to the `plot_*()`
 family (e.g.
-[`plot_model_fit()`](https://bdshaff.github.io/meridianR/reference/plot_model_fit.md),
-[`plot_roi()`](https://bdshaff.github.io/meridianR/reference/plot_roi.md),
-[`plot_response_curves()`](https://bdshaff.github.io/meridianR/reference/plot_response_curves.md)).
+[`plot_model_fit()`](https://roeh-marketing.github.io/meridianR/reference/plot_model_fit.md),
+[`plot_roi()`](https://roeh-marketing.github.io/meridianR/reference/plot_roi.md),
+[`plot_response_curves()`](https://roeh-marketing.github.io/meridianR/reference/plot_response_curves.md)).
 
 ## Usage
 
