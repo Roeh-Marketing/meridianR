@@ -90,16 +90,27 @@ charts.</p>
 <span></span>
 <span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_meridian_input.html">as_meridian_input</a></span><span class="op">(</span></span>
 <span>  <span class="va">sales</span>,</span>
-<span>  kpi <span class="op">=</span> <span class="st">"conversions"</span>, time <span class="op">=</span> <span class="st">"week"</span>, geo <span class="op">=</span> <span class="st">"region"</span>, population <span class="op">=</span> <span class="st">"population"</span>,</span>
-<span>  media_spend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tv_spend"</span>, <span class="st">"search_spend"</span><span class="op">)</span>, media_channels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TV"</span>, <span class="st">"Search"</span><span class="op">)</span>,</span>
+<span>  kpi <span class="op">=</span> <span class="st">"conversions"</span>, </span>
+<span>  time <span class="op">=</span> <span class="st">"week"</span>, </span>
+<span>  geo <span class="op">=</span> <span class="st">"region"</span>, </span>
+<span>  population <span class="op">=</span> <span class="st">"population"</span>,</span>
+<span>  media_spend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tv_spend"</span>, <span class="st">"search_spend"</span><span class="op">)</span>, </span>
+<span>  media_channels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TV"</span>, <span class="st">"Search"</span><span class="op">)</span>,</span>
 <span>  controls <span class="op">=</span> <span class="st">"price_index"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_spec.html">model_spec</a></span><span class="op">(</span>max_lag <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
+<span><span class="va">prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prior_distribution.html">prior_distribution</a></span><span class="op">(</span></span>
+<span>  roi_m <span class="op">=</span> <span class="fu"><a href="../reference/prior_constructors.html">prior_lognormal</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_spec.html">model_spec</a></span><span class="op">(</span></span>
+<span>  max_lag <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  prior  <span class="op">=</span> <span class="va">prior</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">mmm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meridian_model.html">meridian_model</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">spec</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">mmm</span>, n_chains <span class="op">=</span> <span class="fl">4</span>, n_keep <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">mmm</span>, n_chains <span class="op">=</span> <span class="fl">4</span>, n_keep <span class="op">=</span> <span class="fl">2000</span>, n_adapt <span class="op">=</span> <span class="fl">2000</span>, n_burnin <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="tidy-metrics">Tidy metrics<a class="anchor" aria-label="anchor" href="#tidy-metrics"></a>
 </h2>
@@ -108,7 +119,8 @@ ggplot2, or <code>gt</code>. <code><a href="../reference/summary_metrics.html">s
 per-channel ROI, marginal ROI, incremental outcome, contribution share,
 effectiveness, and CPIK for the prior and posterior:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/summary_metrics.html">summary_metrics</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/rhat_summary.html">rhat_summary</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/summary_metrics.html">summary_metrics</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Posterior ROI point estimates per channel</span></span>
 <span><span class="va">sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summary_metrics.html">summary_metrics</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
