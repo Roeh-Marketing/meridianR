@@ -13,8 +13,9 @@ An R interface to Google's 'Meridian' Bayesian Marketing Mix Modeling (MMM) libr
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/bdshaff/meridianR}
-  \item Report bugs at \url{https://github.com/bdshaff/meridianR/issues}
+  \item \url{https://github.com/Roeh-Marketing/meridianR}
+  \item \url{https://roeh-marketing.github.io/meridianR/}
+  \item Report bugs at \url{https://github.com/Roeh-Marketing/meridianR/issues}
 }
 
 }

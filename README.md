@@ -16,7 +16,7 @@ Install the development version from GitHub:
 
 ```r
 # install.packages("pak")
-pak::pak("bdshaff/meridianR")
+pak::pak("Roeh-Marketing/meridianR")
 ```
 
 Then provision the Python side (TensorFlow / TF-Probability) once:
