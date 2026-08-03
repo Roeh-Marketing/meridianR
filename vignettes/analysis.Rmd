@@ -20,16 +20,27 @@ reticulate::use_virtualenv("r-meridian", required = TRUE)
 
 input <- as_meridian_input(
   sales,
-  kpi = "conversions", time = "week", geo = "region", population = "population",
-  media_spend = c("tv_spend", "search_spend"), media_channels = c("TV", "Search"),
+  kpi = "conversions", 
+  time = "week", 
+  geo = "region", 
+  population = "population",
+  media_spend = c("tv_spend", "search_spend"), 
+  media_channels = c("TV", "Search"),
   controls = "price_index"
 )
 
-spec <- model_spec(max_lag = 8)
+prior <- prior_distribution(
+  roi_m = prior_lognormal(-5, 1)
+  )
+
+spec <- model_spec(
+  max_lag = 8,
+  prior  = prior
+  )
 
 mmm <- meridian_model(input, spec)
 
-fit(mmm, n_chains = 4, n_keep = 1000)
+fit(mmm, n_chains = 4, n_keep = 2000, n_adapt = 2000, n_burnin = 2000)
 ```
 
 ## Tidy metrics
@@ -39,6 +50,7 @@ Every accessor returns a tibble, so results flow straight into dplyr, ggplot2, o
 outcome, contribution share, effectiveness, and CPIK for the prior and posterior:
 
 ```{r}
+rhat_summary(mmm)
 summary_metrics(mmm)
 
 # Posterior ROI point estimates per channel
