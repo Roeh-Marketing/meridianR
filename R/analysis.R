@@ -164,6 +164,7 @@ adstock_decay <- function(model, confidence_level = 0.9) {
 #' @export
 rhat_summary <- function(model, bad_rhat_threshold = 1.2) {
   t <- analyzer_pd(model, function(a) a$rhat_summary(bad_rhat_threshold = bad_rhat_threshold))
+  t <- normalize_rhat_names(t)
   keep <- intersect(
     c("param", "n_params", "avg_rhat", "max_rhat", "percent_bad_rhat"),
     names(t)

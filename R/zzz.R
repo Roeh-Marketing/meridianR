@@ -21,7 +21,7 @@
   # Declare the Python dependency so reticulate can provision an environment
   # automatically on first use when no persistent environment (or an interpreter
   # set via RETICULATE_PYTHON) is configured.
-  reticulate::py_require("google-meridian")
+  reticulate::py_require(meridian_pip_spec(meridian_version = meridian_default_version))
 
   # Populate the module handle declared in tethers.R with a lazy proxy. The
   # `<<-` superassignment updates the namespace binding while it is still
