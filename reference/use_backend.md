@@ -1,12 +1,13 @@
 # Select the Meridian compute backend
 
-Meridian can run on a TensorFlow (default) or an experimental JAX
-backend. The backend is read from the `MERIDIAN_BACKEND` environment
-variable when the Meridian Python module is first imported, so for a
-reliable switch call `use_backend()` *before* any other meridianR
-function in a session. If Meridian is already loaded, `use_backend()`
-additionally attempts a runtime switch, which may not take full effect
-until the session is restarted.
+Meridian can run on a TensorFlow or a JAX backend. Meridian 1.x defaults
+to TensorFlow; from Meridian 2.2, JAX is the default and TensorFlow is
+deprecated upstream. The backend is read from the `MERIDIAN_BACKEND`
+environment variable when the Meridian Python module is first imported,
+so for a reliable switch call `use_backend()` *before* any other
+meridianR function in a session. If Meridian is already loaded,
+`use_backend()` additionally attempts a runtime switch, which may not
+take full effect until the session is restarted.
 
 ## Usage
 

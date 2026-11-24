@@ -1,6 +1,6 @@
 # Changelog
 
-## meridianR 0.0.0.9000
+## meridianR 0.0.0.9001
 
 Initial development release (data and modeling core).
 
@@ -10,6 +10,38 @@ Initial development release (data and modeling core).
 
 - Added compatibility adapters for Meridian’s renamed R-hat fields and
   backend-specific prior numeric precision.
+
+- Meridian’s version is checked when it is first imported: meridianR
+  warns (class `meridianR_version_warning`) if the active release is
+  outside the tested window.
+
+- [`install_meridian()`](https://roeh-marketing.github.io/meridianR/reference/install_meridian.md)
+  now bounds Python to 3.11–3.13 (TensorFlow has no 3.14 wheels yet)
+  and, when no suitable interpreter exists, installs one with `uv`
+  before falling back to
+  [`reticulate::install_python()`](https://rstudio.github.io/reticulate/reference/install_python.html).
+
+- [`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md)
+  gains `media_prior_type`; `paid_media_prior_type` (deprecated in
+  Meridian) is kept for compatibility.
+  [`print()`](https://rdrr.io/r/base/print.html) on a model spec shows
+  the effective media and RF prior types.
+
+- [`install_meridian()`](https://roeh-marketing.github.io/meridianR/reference/install_meridian.md)
+  and the on-load requirement now default to Meridian’s own backend
+  (`backend = NULL`): JAX from Meridian 2.2, TensorFlow before. Pass
+  `backend = "tensorflow"` or `"jax"` to choose.
+
+- [`install_meridian()`](https://roeh-marketing.github.io/meridianR/reference/install_meridian.md)
+  always installs the `google-meridian[schema]` extra.
+
+- [`save_model()`](https://roeh-marketing.github.io/meridianR/reference/save_model.md)
+  /
+  [`load_model()`](https://roeh-marketing.github.io/meridianR/reference/save_model.md)
+  support Meridian’s schema serializer, chosen by file extension:
+  `.binpb` / `.txtpb` / `.textproto` use the versioned schema format,
+  `.pkl` the legacy (deprecated) pickle format. Paths without a
+  recognized extension get `.binpb` when the schema extra is available.
 
 - First public scaffold of the package.
 

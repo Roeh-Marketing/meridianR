@@ -6,8 +6,8 @@ meridianR turns Meridian’s results into tidy tibbles and ggplot2 charts.
 
 ``` r
 
-library(meridianR)
 reticulate::use_virtualenv("r-meridian", required = TRUE)
+library(meridianR)
 
 input <- as_meridian_input(
   sales,
@@ -26,7 +26,8 @@ prior <- prior_distribution(
 
 spec <- model_spec(
   max_lag = 8,
-  prior  = prior
+  knots   = 10,
+  prior   = prior
   )
 
 mmm <- meridian_model(input, spec)

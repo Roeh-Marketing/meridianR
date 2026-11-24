@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">meridianR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,11 +84,11 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Roeh-Marketing/meridianR"</span><span class="op">)</span></span></code></pre></div>
-<p>Then provision the Python side (TensorFlow / TF-Probability) once:</p>
+<p>Then provision the Python side (Meridian and its JAX / TensorFlow stack) once:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/install_meridian.html">install_meridian</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><code>install_meridian(gpu = TRUE)</code> installs the CUDA build; <code>install_meridian(backend = "jax")</code> uses the experimental JAX backend. If you skip this step, reticulate provisions an environment automatically on first use.</p>
+<p><code>install_meridian(gpu = TRUE)</code> installs the CUDA build, and <code>install_meridian(meridian_version = "1.7.1")</code> pins an older supported release. If no suitable Python (3.11–3.13) is found, one is installed first (via <code>uv</code> when available). If you skip this step, reticulate provisions an environment automatically on first use.</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -108,23 +108,32 @@
 <span>  controls       <span class="op">=</span> <span class="st">"price_index"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># 2. Configure priors and the model specification</span></span>
+<span><span class="co"># 2. Configure priors and the model specification. `conversions` is a</span></span>
+<span><span class="co">#    non-revenue KPI, so a scale-free contribution prior ("TV drives ~13% of</span></span>
+<span><span class="co">#    conversions, Search ~6%") is easier to reason about than an ROI prior.</span></span>
 <span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/model_spec.html">model_spec</a></span><span class="op">(</span></span>
-<span>  prior   <span class="op">=</span> <span class="fu"><a href="reference/prior_distribution.html">prior_distribution</a></span><span class="op">(</span>roi_m <span class="op">=</span> <span class="fu"><a href="reference/prior_constructors.html">prior_lognormal</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  max_lag <span class="op">=</span> <span class="fl">8</span></span>
+<span>  max_lag          <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  knots            <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  media_prior_type <span class="op">=</span> <span class="st">"contribution"</span>,</span>
+<span>  prior            <span class="op">=</span> <span class="fu"><a href="reference/prior_distribution.html">prior_distribution</a></span><span class="op">(</span>contribution_m <span class="op">=</span> <span class="fu"><a href="reference/prior_constructors.html">prior_beta</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3. Fit</span></span>
 <span><span class="va">mmm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/meridian_model.html">meridian_model</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">spec</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">mmm</span>, n_chains <span class="op">=</span> <span class="fl">7</span>, n_keep <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">mmm</span>, n_chains <span class="op">=</span> <span class="fl">4</span>, n_adapt <span class="op">=</span> <span class="fl">1000</span>, n_burnin <span class="op">=</span> <span class="fl">500</span>, n_keep <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span></code></pre></div>
-<p>See <code><a href="articles/getting-started.html">vignette("getting-started")</a></code> for the full walkthrough.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/rhat_summary.html">rhat_summary</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_roi.html">plot_roi</a></span><span class="op">(</span><span class="va">mmm</span><span class="op">)</span></span></code></pre></div>
+<p>See <code><a href="articles/getting-started.html">vignette("getting-started")</a></code> and <code><a href="articles/analysis.html">vignette("analysis")</a></code> for the full walkthrough, and <code>scripts/learn_meridianR.R</code> in the source repository for a guided tour of every prior (including adstock) with prior-vs-posterior experiments.</p>
 </div>
 <div class="section level2">
 <h2 id="choosing-the-python-environment">Choosing the Python environment<a class="anchor" aria-label="anchor" href="#choosing-the-python-environment"></a>
 </h2>
-<p>Meridian needs Python &gt;= 3.11, and <code><a href="reference/install_meridian.html">install_meridian()</a></code> provisions it together with tested Meridian releases in the range <strong>1.7.1 through 2.2.1</strong> in the <code>r-meridian</code> virtual environment. It installs 2.2.1 by default. The boundary versions have passed the integration suite; intermediate releases are included in the supported range but are not individually listed in the test matrix yet. You can choose an exact version in this range with <code>meridian_version</code>. reticulate can only bind <strong>one</strong> Python per R session, and an interpreter pinned by <code>RETICULATE_PYTHON</code> or your IDE takes precedence over meridianR’s default. If another Python is initialized first you will see:</p>
+<p>Meridian needs Python 3.11–3.13, and <code><a href="reference/install_meridian.html">install_meridian()</a></code> provisions it together with tested Meridian releases in the range <strong>1.7.1 through 2.2.1</strong> in the <code>r-meridian</code> virtual environment. It installs 2.2.1 by default. The boundary versions have passed the integration suite; intermediate releases are included in the supported range but are not individually listed in the test matrix yet. You can choose an exact version in this range with <code>meridian_version</code>. When Meridian is first imported, meridianR warns if the active environment holds a release outside this window.</p>
+<p>meridianR uses <strong>Meridian’s default backend</strong>: JAX from Meridian 2.2 (where TensorFlow is deprecated upstream), TensorFlow before that. <code>use_backend("tensorflow")</code> or <code>use_backend("jax")</code> overrides it; call it before Meridian is first imported.</p>
+<p><code><a href="reference/save_model.html">save_model()</a></code> writes Meridian’s versioned schema format for <code>.binpb</code> / <code>.txtpb</code> paths (readable across Meridian versions) and the legacy pickle format for <code>.pkl</code> paths.</p>
+<p>reticulate can only bind <strong>one</strong> Python per R session, and an interpreter pinned by <code>RETICULATE_PYTHON</code> or your IDE takes precedence over meridianR’s default. If another Python is initialized first you will see:</p>
 <pre><code>ERROR: The requested version of Python (...) cannot be used, as another version
 of Python (...) has already been initialized.</code></pre>
 <p>To fix it, point reticulate at <code>r-meridian</code> <strong>before</strong> anything else touches Python, then restart R:</p>
@@ -147,7 +156,7 @@ of Python (...) has already been initialized.</code></pre>
 <div class="section level2">
 <h2 id="status">Status<a class="anchor" aria-label="anchor" href="#status"></a>
 </h2>
-<p>meridianR is in early development. The current release covers the <strong>data and modeling core</strong> — data loading, model specification, priors, and MCMC fitting. Analysis (tidy metrics and ggplot2 charts) and budget optimization are on the roadmap.</p>
+<p>meridianR is in early development. The current release covers data loading, model specification, priors, MCMC fitting, and analysis (tidy metrics and ggplot2 charts). Budget optimization is on the roadmap.</p>
 <p>Everything in Meridian remains reachable through the <code>meridian</code> module handle, the low-level escape hatch beneath the wrappers.</p>
 </div>
 </div>

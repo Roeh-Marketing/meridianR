@@ -16,13 +16,14 @@ model_spec(
   hill_before_adstock = NULL,
   max_lag = NULL,
   unique_sigma_for_each_geo = NULL,
-  paid_media_prior_type = NULL,
+  media_prior_type = NULL,
   rf_prior_type = NULL,
   knots = NULL,
   baseline_geo = NULL,
   holdout_id = NULL,
   adstock_decay_spec = NULL,
   saturation_spec = NULL,
+  paid_media_prior_type = NULL,
   ...
 )
 ```
@@ -50,10 +51,14 @@ model_spec(
 
   Estimate a separate residual standard deviation per geo?
 
-- paid_media_prior_type, rf_prior_type:
+- media_prior_type, rf_prior_type:
 
-  How the paid-media and reach-and-frequency priors are parameterized,
-  e.g. `"roi"`, `"mroi"`, `"contribution"`, or `"coefficient"`.
+  How the paid-media and reach-and-frequency priors are parameterized:
+  `"roi"` (Meridian default), `"mroi"`, `"contribution"`, or
+  `"coefficient"`. The matching prior in
+  [`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md)
+  is then `roi_m`, `mroi_m`, `contribution_m`, or `beta_m` (and the
+  `_rf` equivalents).
 
 - knots:
 
@@ -78,12 +83,16 @@ model_spec(
 
   Saturation function: `"hill"` (default), or a named list per channel.
 
+- paid_media_prior_type:
+
+  Deprecated in Meridian; sets `media_prior_type` and `rf_prior_type`
+  together. Use those instead.
+
 - ...:
 
   Further arguments forwarded to `ModelSpec`, such as
-  `media_prior_type`, `roi_calibration_period`,
-  `organic_media_prior_type`, `non_media_treatments_prior_type`, or
-  `enable_aks`.
+  `roi_calibration_period`, `organic_media_prior_type`,
+  `non_media_treatments_prior_type`, or `enable_aks`.
 
 ## Value
 

@@ -11,10 +11,10 @@ future sessions.
 install_meridian(
   envname = "r-meridian",
   ...,
-  backend = c("tensorflow", "jax"),
+  backend = NULL,
   gpu = FALSE,
-  meridian_version = "2.2.1",
-  python_version = ">=3.11",
+  meridian_version = meridian_default_version,
+  python_version = ">=3.11,<3.14",
   new_env = identical(envname, "r-meridian")
 )
 ```
@@ -33,11 +33,13 @@ install_meridian(
 
 - backend:
 
-  Compute backend to provision: `"tensorflow"` (default) or the
-  experimental `"jax"` backend. The JAX backend pulls in the
-  `google-meridian[jax]` extra and is recorded as the default backend
-  for future sessions (see
-  [`use_backend()`](https://roeh-marketing.github.io/meridianR/reference/use_backend.md)).
+  `NULL` (default) to use Meridian's own default backend – JAX from
+  Meridian 2.2, TensorFlow before that – or `"tensorflow"` / `"jax"` to
+  choose one. `"jax"` also installs the `google-meridian[jax]` extra
+  (needed on Meridian 1.x). An explicit choice applies to the current
+  session; use
+  [`use_backend()`](https://roeh-marketing.github.io/meridianR/reference/use_backend.md)
+  at the start of later sessions.
 
 - gpu:
 
@@ -54,7 +56,8 @@ install_meridian(
 - python_version:
 
   Python version constraint used when creating a new environment.
-  Meridian requires Python \>= 3.11.
+  Meridian's JAX dependency needs Python \>= 3.11, and TensorFlow does
+  not yet publish wheels for Python 3.14.
 
 - new_env:
 
@@ -72,20 +75,27 @@ If you skip this step, meridianR still works:
 [`reticulate::py_require()`](https://rstudio.github.io/reticulate/reference/py_require.html)
 (set up on load) will provision an ephemeral environment containing
 Meridian the first time Python is used. `install_meridian()` is
-recommended when you want a reusable environment, GPU support, or the
-experimental JAX backend.
+recommended when you want a reusable environment, a specific Meridian
+version, or GPU support.
+
+If no Python interpreter satisfying `python_version` is found, one is
+installed first – with `uv` when it is on the `PATH`, otherwise with
+[`reticulate::install_python()`](https://rstudio.github.io/reticulate/reference/install_python.html).
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Default CPU / TensorFlow install
+# Default CPU install of the newest tested Meridian release
 install_meridian()
+
+# A specific supported release, in its own environment
+install_meridian("r-meridian-1.7.1", meridian_version = "1.7.1")
 
 # GPU build
 install_meridian(gpu = TRUE)
 
-# Experimental JAX backend
-install_meridian(backend = "jax")
+# Force a backend instead of Meridian's default
+install_meridian(backend = "tensorflow")
 } # }
 ```

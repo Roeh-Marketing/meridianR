@@ -6,27 +6,38 @@ Mix Modeling (MMM) library. It wraps the Meridian Python package with
 [reticulate](https://rstudio.github.io/reticulate/), pairing faithful
 bindings to Meridian’s objects with an idiomatic R layer.
 
-``` r
-
-reticulate::use_virtualenv("~/.virtualenvs/r-meridian", required = TRUE)
-library(meridianR)
-meridian_version() 
-```
-
 ## Installation
 
-Meridian runs on Python (TensorFlow / TF-Probability). Install it once
-into a persistent environment:
+Meridian runs on Python (JAX or TensorFlow, with TensorFlow
+Probability). Install it once into a persistent `r-meridian`
+environment:
 
 ``` r
 
-install_meridian()
+meridianR::install_meridian()
 ```
 
-If you skip this, `meridianR` still works: reticulate provisions an
-environment automatically the first time you use a Meridian function.
-Use `install_meridian(gpu = TRUE)` for the CUDA build or
-`install_meridian(backend = "jax")` for the experimental JAX backend.
+This installs the newest tested Meridian release (2.2.1); any release
+from 1.7.1 to 2.2.1 can be chosen with `meridian_version`. If no Python
+3.11–3.13 is available, one is installed first. Use
+`install_meridian(gpu = TRUE)` for the CUDA build. If you skip this
+step, `meridianR` still works: reticulate provisions an environment
+automatically the first time you use a Meridian function.
+
+In each new session, bind that environment before anything else touches
+Python, then load the package:
+
+``` r
+
+reticulate::use_virtualenv("r-meridian", required = TRUE)
+library(meridianR)
+meridian_version()
+```
+
+meridianR uses Meridian’s default compute backend: JAX from Meridian 2.2
+(where TensorFlow is deprecated), TensorFlow before that. Call
+`use_backend("tensorflow")` or `use_backend("jax")` before first use to
+choose one explicitly.
 
 ## Assemble input data
 
@@ -106,6 +117,33 @@ model_spec(
 )
 ```
 
+For a non-revenue KPI, the most natural informative prior is usually on
+each channel’s **share of the KPI**. Switch the prior family with
+`media_prior_type` and supply `contribution_m` (one value per channel,
+in channel order):
+
+``` r
+
+model_spec(
+  max_lag          = 8,
+  media_prior_type = "contribution",
+  prior            = prior_distribution(contribution_m = prior_beta(c(3, 2), c(20, 30)))
+)
+```
+
+The other choices are `"roi"` (the default, `roi_m`), `"mroi"`
+(`mroi_m`), and `"coefficient"` (`beta_m`). Adstock is controlled by
+`max_lag`, the `adstock_decay_spec` (`"geometric"` or `"binomial"`, or a
+named list per channel), and the `alpha_m` prior.
+
+**Baseline knots.** For a geo model, Meridian’s default is one baseline
+knot per time period (104 here), which is very flexible and can converge
+slowly. A smaller number, e.g. `model_spec(knots = 10)`, or automatic
+knot selection with `model_spec(enable_aks = TRUE)` often fits faster
+and mixes better. Check
+[`rhat_summary()`](https://roeh-marketing.github.io/meridianR/reference/rhat_summary.md)
+after fitting.
+
 ## Fit the model
 
 Create the model, then draw from the prior and posterior.
@@ -132,9 +170,14 @@ the same model object.
 
 ``` r
 
-save_model(mmm, "mmm.pkl")
-mmm <- load_model("mmm.pkl")
+save_model(mmm, "mmm.binpb")
+mmm <- load_model("mmm.binpb")
 ```
+
+The `.binpb` extension selects Meridian’s versioned schema format, which
+other Meridian versions can read. A `.pkl` path uses the legacy pickle
+format instead; it only reloads under the same Meridian version and is
+deprecated from Meridian 2.2.
 
 ## Drop down to Python
 
@@ -146,5 +189,5 @@ handle, the low-level escape hatch beneath the wrappers:
 meridian$analysis$analyzer$Analyzer(mmm)
 ```
 
-Analysis, visualization, and budget optimization wrappers build on this
-foundation and arrive in subsequent releases.
+For tidy metrics, diagnostics, and ggplot2 charts of a fitted model, see
+[`vignette("analysis")`](https://roeh-marketing.github.io/meridianR/articles/analysis.md).

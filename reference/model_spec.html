@@ -13,7 +13,7 @@ custom priors by passing a prior_distribution() to prior."><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">meridianR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,13 +64,14 @@ custom priors by passing a <code><a href="prior_distribution.html">prior_distrib
 <span>  hill_before_adstock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max_lag <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  unique_sigma_for_each_geo <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  paid_media_prior_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  media_prior_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rf_prior_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  knots <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  baseline_geo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  holdout_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  adstock_decay_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  saturation_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  paid_media_prior_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -102,10 +103,12 @@ default 8).</p></dd>
 deviation per geo?</p></dd>
 
 
-<dt id="arg-paid-media-prior-type-rf-prior-type">paid_media_prior_type, rf_prior_type<a class="anchor" aria-label="anchor" href="#arg-paid-media-prior-type-rf-prior-type"></a></dt>
+<dt id="arg-media-prior-type-rf-prior-type">media_prior_type, rf_prior_type<a class="anchor" aria-label="anchor" href="#arg-media-prior-type-rf-prior-type"></a></dt>
 <dd><p>How the paid-media and
-reach-and-frequency priors are parameterized, e.g. <code>"roi"</code>, <code>"mroi"</code>,
-<code>"contribution"</code>, or <code>"coefficient"</code>.</p></dd>
+reach-and-frequency priors are parameterized: <code>"roi"</code> (Meridian default),
+<code>"mroi"</code>, <code>"contribution"</code>, or <code>"coefficient"</code>. The matching prior in
+<code><a href="prior_distribution.html">prior_distribution()</a></code> is then <code>roi_m</code>, <code>mroi_m</code>, <code>contribution_m</code>, or
+<code>beta_m</code> (and the <code>_rf</code> equivalents).</p></dd>
 
 
 <dt id="arg-knots">knots<a class="anchor" aria-label="anchor" href="#arg-knots"></a></dt>
@@ -132,9 +135,14 @@ observations for out-of-sample evaluation.</p></dd>
 list per channel.</p></dd>
 
 
+<dt id="arg-paid-media-prior-type">paid_media_prior_type<a class="anchor" aria-label="anchor" href="#arg-paid-media-prior-type"></a></dt>
+<dd><p>Deprecated in Meridian; sets <code>media_prior_type</code>
+and <code>rf_prior_type</code> together. Use those instead.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments forwarded to <code>ModelSpec</code>, such as
-<code>media_prior_type</code>, <code>roi_calibration_period</code>, <code>organic_media_prior_type</code>,
+<code>roi_calibration_period</code>, <code>organic_media_prior_type</code>,
 <code>non_media_treatments_prior_type</code>, or <code>enable_aks</code>.</p></dd>
 
 </dl></div>

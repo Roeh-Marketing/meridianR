@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">meridianR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,10 +43,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.0.9000" id="meridianr-0009000">meridianR 0.0.0.9000<a class="anchor" aria-label="anchor" href="#meridianr-0009000"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.0.9001" id="meridianr-0009001">meridianR 0.0.0.9001<a class="anchor" aria-label="anchor" href="#meridianr-0009001"></a></h2>
 <p>Initial development release (data and modeling core).</p>
 <ul><li><p>Python provisioning now requires Python &gt;= 3.11 and defaults to the tested Meridian 2.2.1 release, with supported versions constrained to 1.7.1–2.2.1.</p></li>
 <li><p>Added compatibility adapters for Meridian’s renamed R-hat fields and backend-specific prior numeric precision.</p></li>
+<li><p>Meridian’s version is checked when it is first imported: meridianR warns (class <code>meridianR_version_warning</code>) if the active release is outside the tested window.</p></li>
+<li><p><code><a href="../reference/install_meridian.html">install_meridian()</a></code> now bounds Python to 3.11–3.13 (TensorFlow has no 3.14 wheels yet) and, when no suitable interpreter exists, installs one with <code>uv</code> before falling back to <code><a href="https://rstudio.github.io/reticulate/reference/install_python.html" class="external-link">reticulate::install_python()</a></code>.</p></li>
+<li><p><code><a href="../reference/model_spec.html">model_spec()</a></code> gains <code>media_prior_type</code>; <code>paid_media_prior_type</code> (deprecated in Meridian) is kept for compatibility. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> on a model spec shows the effective media and RF prior types.</p></li>
+<li><p><code><a href="../reference/install_meridian.html">install_meridian()</a></code> and the on-load requirement now default to Meridian’s own backend (<code>backend = NULL</code>): JAX from Meridian 2.2, TensorFlow before. Pass <code>backend = "tensorflow"</code> or <code>"jax"</code> to choose.</p></li>
+<li><p><code><a href="../reference/install_meridian.html">install_meridian()</a></code> always installs the <code>google-meridian[schema]</code> extra.</p></li>
+<li><p><code><a href="../reference/save_model.html">save_model()</a></code> / <code><a href="../reference/save_model.html">load_model()</a></code> support Meridian’s schema serializer, chosen by file extension: <code>.binpb</code> / <code>.txtpb</code> / <code>.textproto</code> use the versioned schema format, <code>.pkl</code> the legacy (deprecated) pickle format. Paths without a recognized extension get <code>.binpb</code> when the schema extra is available.</p></li>
 <li><p>First public scaffold of the package.</p></li>
 <li><p>Python provisioning via <code><a href="https://rstudio.github.io/reticulate/reference/py_require.html" class="external-link">reticulate::py_require()</a></code> with an <code><a href="../reference/install_meridian.html">install_meridian()</a></code> helper; <code><a href="../reference/use_backend.html">use_backend()</a></code> selects the TensorFlow or JAX backend.</p></li>
 <li><p>Data interface: <code><a href="../reference/as_meridian_input.html">as_meridian_input()</a></code>, the fluent <code><a href="../reference/input_data_builder.html">input_data_builder()</a></code> with <code>with_*()</code> verbs, and faithful <code><a href="../reference/coord_to_columns.html">coord_to_columns()</a></code> / <code><a href="../reference/csv_loader.html">csv_loader()</a></code> / <code><a href="../reference/csv_loader.html">data_frame_loader()</a></code> bindings.</p></li>

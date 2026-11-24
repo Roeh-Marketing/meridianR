@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">meridianR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,8 +84,8 @@
 meridianR turns Meridian’s results into tidy tibbles and ggplot2
 charts.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_virtualenv</a></span><span class="op">(</span><span class="st">"r-meridian"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_virtualenv</a></span><span class="op">(</span><span class="st">"r-meridian"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Roeh-Marketing/meridianR" class="external-link">meridianR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_meridian_input.html">as_meridian_input</a></span><span class="op">(</span></span>
 <span>  <span class="va">sales</span>,</span>
@@ -104,7 +104,8 @@ charts.</p>
 <span></span>
 <span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_spec.html">model_spec</a></span><span class="op">(</span></span>
 <span>  max_lag <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>  prior  <span class="op">=</span> <span class="va">prior</span></span>
+<span>  knots   <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  prior   <span class="op">=</span> <span class="va">prior</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">mmm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meridian_model.html">meridian_model</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">spec</span><span class="op">)</span></span>
