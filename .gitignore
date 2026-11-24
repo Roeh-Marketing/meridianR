@@ -14,6 +14,11 @@ vignettes/*.html
 meridian_summary.html
 docs
 
+# Local Python environments used for Meridian integration checks.
+.meridian-test-env/
+.meridian-v1-test-env/
+.uv-python/
+
 # Secrets — never commit. API keys live in ~/.Renviron, outside the repo.
 .Renviron
 .Rprofile

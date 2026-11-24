@@ -39,7 +39,22 @@ tfd <- function() {
 
 # Construct a tfd distribution by class name, dropping NULL arguments.
 tfd_dist <- function(cls, ...) {
-  do.call(tfd()[[cls]], compact(list(...)))
+  args <- compact(list(...))
+  # Meridian's backend precision can be float64 on JAX, while TFP otherwise
+  # infers float32 from scalar parameters. Cast numeric parameters before
+  # construction so the distributions match the selected Meridian backend.
+  dtype <- meridian_float_dtype()
+  numpy <- reticulate::import("numpy", convert = FALSE)
+  numeric_args <- intersect(
+    names(args),
+    c("loc", "scale", "low", "high", "concentration1", "concentration0")
+  )
+  for (arg in numeric_args) {
+    if (is.numeric(args[[arg]])) {
+      args[[arg]] <- numpy$asarray(args[[arg]], dtype = dtype)
+    }
+  }
+  do.call(tfd()[[cls]], args)
 }
 
 #' Prior distribution constructors

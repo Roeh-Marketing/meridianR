@@ -2,6 +2,11 @@
 
 Initial development release (data and modeling core).
 
+* Python provisioning now requires Python >= 3.11 and defaults to the tested
+  Meridian 2.2.1 release, with supported versions constrained to 1.7.1--2.2.1.
+* Added compatibility adapters for Meridian's renamed R-hat fields and
+  backend-specific prior numeric precision.
+
 * First public scaffold of the package.
 * Python provisioning via `reticulate::py_require()` with an `install_meridian()`
   helper; `use_backend()` selects the TensorFlow or JAX backend.

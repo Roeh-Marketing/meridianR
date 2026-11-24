@@ -1,5 +1,9 @@
 # Installation and Python environment management.
 
+meridian_default_version <- "2.2.1"
+meridian_min_version <- "1.7.1"
+meridian_max_version <- "2.2.1"
+
 #' Install Meridian and its Python dependencies
 #'
 #' Creates (or reuses) a persistent Python virtual environment and installs the
@@ -21,8 +25,11 @@
 #'   future sessions (see [use_backend()]).
 #' @param gpu Logical; if `TRUE`, install the CUDA GPU build
 #'   (`google-meridian[and-cuda]`). Ignored on platforms without CUDA support.
+#' @param meridian_version Exact version of `google-meridian` to install.
+#'   Supported versions currently range from 1.7.1 through 2.2.1; the default
+#'   is the newest tested release.
 #' @param python_version Python version constraint used when creating a new
-#'   environment. Meridian requires Python >= 3.10.
+#'   environment. Meridian requires Python >= 3.11.
 #' @param new_env If `TRUE`, any existing environment of the same name is
 #'   removed before installing. Defaults to `TRUE` only for the default
 #'   `"r-meridian"` environment.
@@ -45,21 +52,88 @@ install_meridian <- function(envname = "r-meridian",
                              ...,
                              backend = c("tensorflow", "jax"),
                              gpu = FALSE,
-                             python_version = ">=3.10",
+                             meridian_version = "2.2.1",
+                             python_version = ">=3.11",
                              new_env = identical(envname, "r-meridian")) {
   backend <- match.arg(backend)
-  pkg <- meridian_pip_spec(backend = backend, gpu = gpu)
+  validate_meridian_version(meridian_version)
+  pkg <- meridian_pip_spec(
+    backend = backend,
+    gpu = gpu,
+    meridian_version = meridian_version
+  )
+
+  python_floor <- regmatches(
+    python_version,
+    regexpr("[0-9]+\\.[0-9]+", python_version)
+  )
+  if (!length(python_floor) || !nzchar(python_floor) ||
+      numeric_version(python_floor) < "3.11") {
+    cli::cli_abort("Meridian requires Python 3.11 or newer in this package.")
+  }
+
+  # py_install() creates virtual environments but does not install Python
+  # itself. Reuse a compatible interpreter when reticulate can discover one;
+  # otherwise ask reticulate to install a managed Python.
+  python_minor <- paste0(python_floor, ":latest")
 
   if (isTRUE(new_env) && reticulate::virtualenv_exists(envname)) {
     reticulate::virtualenv_remove(envname, confirm = FALSE)
   }
 
-  reticulate::py_install(
-    packages = pkg,
-    envname = envname,
-    pip = TRUE,
-    python_version = python_version,
-    ...
+  # reticulate's uv-backed provisioning may otherwise use a user cache that
+  # is not writable in managed or containerized environments.
+  old_uv_cache <- Sys.getenv("UV_CACHE_DIR", unset = NA_character_)
+  if (is.na(old_uv_cache)) {
+    uv_cache <- file.path(tempdir(), "meridianR-uv-cache")
+    dir.create(uv_cache, recursive = TRUE, showWarnings = FALSE)
+    Sys.setenv(UV_CACHE_DIR = uv_cache)
+    on.exit(Sys.unsetenv("UV_CACHE_DIR"), add = TRUE)
+  }
+  on.exit({
+    if (!is.na(old_uv_cache)) Sys.setenv(UV_CACHE_DIR = old_uv_cache)
+  }, add = TRUE)
+
+  python_config <- tryCatch(
+    reticulate::py_discover_config(),
+    error = function(e) NULL
+  )
+  if (is.null(python_config) || is.null(python_config$version) ||
+      python_config$version < numeric_version(python_floor)) {
+    tryCatch(
+      reticulate::install_python(version = python_minor, optimized = FALSE),
+      error = function(e) {
+        cli::cli_abort(
+          c(
+            "Could not install Python {.val {python_minor}}.",
+            "i" = "Meridian requires Python 3.11 or newer.",
+            "x" = conditionMessage(e)
+          ),
+          parent = e
+        )
+      }
+    )
+  }
+
+  tryCatch(
+    reticulate::py_install(
+      packages = pkg,
+      envname = envname,
+      pip = TRUE,
+      python_version = python_version,
+      ...
+    ),
+    error = function(e) {
+      cli::cli_abort(
+        c(
+          "Could not install Meridian into {.val {envname}}.",
+          "i" = "Requested Python: {.val {python_version}}; package: {.val {pkg}}.",
+          "i" = "Check that Python can be downloaded and that the environment path is writable.",
+          "x" = conditionMessage(e)
+        ),
+        parent = e
+      )
+    }
   )
 
   options(meridianR.virtualenv = envname, meridianR.backend = backend)
@@ -71,15 +145,34 @@ install_meridian <- function(envname = "r-meridian",
   invisible(envname)
 }
 
+validate_meridian_version <- function(version) {
+  if (length(version) != 1L || is.na(version) ||
+      !grepl("^[0-9]+\\.[0-9]+\\.[0-9]+$", version)) {
+    cli::cli_abort("{.arg meridian_version} must be an exact release version.")
+  }
+  version <- numeric_version(version)
+  if (version < numeric_version(meridian_min_version) ||
+      version > numeric_version(meridian_max_version)) {
+    cli::cli_abort(
+      "Supported Meridian versions are {.val {meridian_min_version}} through {.val {meridian_max_version}}."
+    )
+  }
+  invisible(TRUE)
+}
+
 # Build the pip requirement string with the appropriate extras.
-meridian_pip_spec <- function(backend = "tensorflow", gpu = FALSE) {
+meridian_pip_spec <- function(backend = "tensorflow", gpu = FALSE,
+                              meridian_version = meridian_default_version) {
   extras <- character()
   if (isTRUE(gpu)) extras <- c(extras, "and-cuda")
   if (identical(backend, "jax")) extras <- c(extras, "jax")
   if (length(extras)) {
-    sprintf("google-meridian[%s]", paste(extras, collapse = ","))
+    sprintf(
+      "google-meridian[%s]==%s",
+      paste(extras, collapse = ","), meridian_version
+    )
   } else {
-    "google-meridian"
+    sprintf("google-meridian==%s", meridian_version)
   }
 }
 
