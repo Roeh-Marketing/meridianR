@@ -1,6 +1,6 @@
 Package: meridianR
 Title: R Interface to Google Meridian (Marketing Mix Modeling)
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R:
     person("Ben Denis", "Shaffer", , "shafferbendenis@gmail.com", role = c("aut", "cre"))
 Description: An R interface to Google's 'Meridian' Bayesian Marketing Mix

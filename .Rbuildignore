@@ -10,3 +10,6 @@
 ^data-raw$
 ^\.claude$
 ^\.DS_Store$
+^scripts$
+^\.meridian-test-env$
+^\.uv-python$

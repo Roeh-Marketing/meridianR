@@ -10,13 +10,14 @@ model_spec(
   hill_before_adstock = NULL,
   max_lag = NULL,
   unique_sigma_for_each_geo = NULL,
-  paid_media_prior_type = NULL,
+  media_prior_type = NULL,
   rf_prior_type = NULL,
   knots = NULL,
   baseline_geo = NULL,
   holdout_id = NULL,
   adstock_decay_spec = NULL,
   saturation_spec = NULL,
+  paid_media_prior_type = NULL,
   ...
 )
 }
@@ -34,9 +35,11 @@ default 8).}
 \item{unique_sigma_for_each_geo}{Estimate a separate residual standard
 deviation per geo?}
 
-\item{paid_media_prior_type, rf_prior_type}{How the paid-media and
-reach-and-frequency priors are parameterized, e.g. \code{"roi"}, \code{"mroi"},
-\code{"contribution"}, or \code{"coefficient"}.}
+\item{media_prior_type, rf_prior_type}{How the paid-media and
+reach-and-frequency priors are parameterized: \code{"roi"} (Meridian default),
+\code{"mroi"}, \code{"contribution"}, or \code{"coefficient"}. The matching prior in
+\code{\link[=prior_distribution]{prior_distribution()}} is then \code{roi_m}, \code{mroi_m}, \code{contribution_m}, or
+\code{beta_m} (and the \verb{_rf} equivalents).}
 
 \item{knots}{Number of spline knots (a single integer) or a vector of knot
 positions, controlling the time-varying baseline.}
@@ -52,8 +55,11 @@ observations for out-of-sample evaluation.}
 \item{saturation_spec}{Saturation function: \code{"hill"} (default), or a named
 list per channel.}
 
+\item{paid_media_prior_type}{Deprecated in Meridian; sets \code{media_prior_type}
+and \code{rf_prior_type} together. Use those instead.}
+
 \item{...}{Further arguments forwarded to \code{ModelSpec}, such as
-\code{media_prior_type}, \code{roi_calibration_period}, \code{organic_media_prior_type},
+\code{roi_calibration_period}, \code{organic_media_prior_type},
 \code{non_media_treatments_prior_type}, or \code{enable_aks}.}
 }
 \value{

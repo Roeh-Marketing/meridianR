@@ -19,16 +19,18 @@ Install the development version from GitHub:
 pak::pak("Roeh-Marketing/meridianR")
 ```
 
-Then provision the Python side (TensorFlow / TF-Probability) once:
+Then provision the Python side (Meridian and its JAX / TensorFlow stack) once:
 
 ```r
 library(meridianR)
 install_meridian()
 ```
 
-`install_meridian(gpu = TRUE)` installs the CUDA build;
-`install_meridian(backend = "jax")` uses the experimental JAX backend. If you
-skip this step, reticulate provisions an environment automatically on first use.
+`install_meridian(gpu = TRUE)` installs the CUDA build, and
+`install_meridian(meridian_version = "1.7.1")` pins an older supported release.
+If no suitable Python (3.11--3.13) is found, one is installed first (via `uv`
+when available). If you skip this step, reticulate provisions an environment
+automatically on first use.
 
 ## Quick start
 
@@ -47,33 +49,53 @@ input <- as_meridian_input(
   controls       = "price_index"
 )
 
-# 2. Configure priors and the model specification
+# 2. Configure priors and the model specification. `conversions` is a
+#    non-revenue KPI, so a scale-free contribution prior ("TV drives ~13% of
+#    conversions, Search ~6%") is easier to reason about than an ROI prior.
 spec <- model_spec(
-  prior   = prior_distribution(roi_m = prior_lognormal(0.2, 0.9)),
-  max_lag = 8
+  max_lag          = 8,
+  knots            = 10,
+  media_prior_type = "contribution",
+  prior            = prior_distribution(contribution_m = prior_beta(c(3, 2), c(20, 30)))
 )
 
 # 3. Fit
 mmm <- meridian_model(input, spec)
-fit(mmm, n_chains = 7, n_keep = 1000)
+fit(mmm, n_chains = 4, n_adapt = 1000, n_burnin = 500, n_keep = 1000)
 
 summary(mmm)
+rhat_summary(mmm)
+plot_roi(mmm)
 ```
 
-See `vignette("getting-started")` for the full walkthrough.
+See `vignette("getting-started")` and `vignette("analysis")` for the full
+walkthrough, and `scripts/learn_meridianR.R` in the source repository for a
+guided tour of every prior (including adstock) with prior-vs-posterior
+experiments.
 
 ## Choosing the Python environment
 
-Meridian needs Python >= 3.11, and `install_meridian()` provisions it together
+Meridian needs Python 3.11--3.13, and `install_meridian()` provisions it together
 with tested Meridian releases in the range **1.7.1 through 2.2.1** in the
 `r-meridian` virtual environment. It installs 2.2.1 by default. The boundary
 versions have passed the integration suite; intermediate releases are included
 in the supported range but are not individually listed in the test matrix yet.
-You can choose an exact version in this range with `meridian_version`.
-reticulate can only bind
-**one** Python per R session, and
-an interpreter pinned by `RETICULATE_PYTHON` or your IDE takes precedence over
-meridianR's default. If another Python is initialized first you will see:
+You can choose an exact version in this range with `meridian_version`. When
+Meridian is first imported, meridianR warns if the active environment holds a
+release outside this window.
+
+meridianR uses **Meridian's default backend**: JAX from Meridian 2.2 (where
+TensorFlow is deprecated upstream), TensorFlow before that.
+`use_backend("tensorflow")` or `use_backend("jax")` overrides it; call it
+before Meridian is first imported.
+
+`save_model()` writes Meridian's versioned schema format for `.binpb` /
+`.txtpb` paths (readable across Meridian versions) and the legacy pickle format
+for `.pkl` paths.
+
+reticulate can only bind **one** Python per R session, and an interpreter
+pinned by `RETICULATE_PYTHON` or your IDE takes precedence over meridianR's
+default. If another Python is initialized first you will see:
 
 ```
 ERROR: The requested version of Python (...) cannot be used, as another version
@@ -104,10 +126,9 @@ silenceable with `suppressWarnings()`. To keep the raw Python output instead, se
 
 ## Status
 
-meridianR is in early development. The current release covers the **data and
-modeling core** — data loading, model specification, priors, and MCMC fitting.
-Analysis (tidy metrics and ggplot2 charts) and budget optimization are on the
-roadmap.
+meridianR is in early development. The current release covers data loading,
+model specification, priors, MCMC fitting, and analysis (tidy metrics and
+ggplot2 charts). Budget optimization is on the roadmap.
 
 Everything in Meridian remains reachable through the `meridian` module handle,
 the low-level escape hatch beneath the wrappers.

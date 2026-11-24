@@ -15,17 +15,36 @@ load_model(path)
 \item{path}{File path to write to or read from.}
 }
 \value{
-\code{save_model()} returns \code{path} invisibly; \code{load_model()} returns a
+\code{save_model()} returns the path actually written, invisibly (it can
+differ from \code{path} when an extension was added); \code{load_model()} returns a
 \code{meridian_model}.
 }
 \description{
 \code{save_model()} serializes a Meridian model -- including its inference data --
-to a file, and \code{load_model()} restores it. Thin bindings to Meridian's
-\code{save_mmm()} and \code{load_mmm()}.
+to a file, and \code{load_model()} restores it.
+}
+\details{
+Meridian has two file formats, and the file extension selects which one is
+used:
+\itemize{
+\item \strong{Schema} (\code{.binpb} binary, or \code{.txtpb} / \code{.textproto} text): Meridian's
+versioned protobuf format, via \code{meridian.schema.serde.meridian_serde}. It
+can be read by other Meridian versions and is the format Meridian
+recommends from 2.2 on. It needs the \code{google-meridian[schema]} extra,
+which \code{\link[=install_meridian]{install_meridian()}} installs.
+\item \strong{Pickle} (\code{.pkl}, \code{.pickle}, \code{.joblib}): Meridian's legacy
+\code{save_mmm()} / \code{load_mmm()}. Only guaranteed to reload with the same
+Meridian version, and deprecated in Meridian 2.2.
+}
+
+Any other extension (or none) uses the schema format when it is available --
+\code{.binpb} is appended to the file name -- and falls back to pickle otherwise.
 }
 \examples{
 \dontrun{
-save_model(mmm, "mmm.pkl")
-mmm2 <- load_model("mmm.pkl")
+save_model(mmm, "mmm.binpb")   # schema format (recommended)
+mmm2 <- load_model("mmm.binpb")
+
+save_model(mmm, "mmm.pkl")     # legacy pickle format
 }
 }
