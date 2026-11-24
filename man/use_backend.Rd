@@ -13,7 +13,9 @@ use_backend(backend = c("tensorflow", "jax"))
 The selected backend, invisibly.
 }
 \description{
-Meridian can run on a TensorFlow (default) or an experimental JAX backend.
+Meridian can run on a TensorFlow or a JAX backend. Meridian 1.x defaults to
+TensorFlow; from Meridian 2.2, JAX is the default and TensorFlow is
+deprecated upstream.
 The backend is read from the \code{MERIDIAN_BACKEND} environment variable when the
 Meridian Python module is first imported, so for a reliable switch call
 \code{use_backend()} \emph{before} any other meridianR function in a session. If

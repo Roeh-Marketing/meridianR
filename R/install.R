@@ -14,22 +14,28 @@ meridian_max_version <- "2.2.1"
 #' If you skip this step, meridianR still works: [reticulate::py_require()] (set
 #' up on load) will provision an ephemeral environment containing Meridian the
 #' first time Python is used. `install_meridian()` is recommended when you want
-#' a reusable environment, GPU support, or the experimental JAX backend.
+#' a reusable environment, a specific Meridian version, or GPU support.
+#'
+#' If no Python interpreter satisfying `python_version` is found, one is
+#' installed first -- with `uv` when it is on the `PATH`, otherwise with
+#' [reticulate::install_python()].
 #'
 #' @param envname Name of (or path to) the virtual environment to install into.
 #'   Defaults to `"r-meridian"`.
 #' @param ... Additional arguments passed to [reticulate::py_install()].
-#' @param backend Compute backend to provision: `"tensorflow"` (default) or the
-#'   experimental `"jax"` backend. The JAX backend pulls in the
-#'   `google-meridian[jax]` extra and is recorded as the default backend for
-#'   future sessions (see [use_backend()]).
+#' @param backend `NULL` (default) to use Meridian's own default backend --
+#'   JAX from Meridian 2.2, TensorFlow before that -- or `"tensorflow"` /
+#'   `"jax"` to choose one. `"jax"` also installs the `google-meridian[jax]`
+#'   extra (needed on Meridian 1.x). An explicit choice applies to the current
+#'   session; use [use_backend()] at the start of later sessions.
 #' @param gpu Logical; if `TRUE`, install the CUDA GPU build
 #'   (`google-meridian[and-cuda]`). Ignored on platforms without CUDA support.
 #' @param meridian_version Exact version of `google-meridian` to install.
 #'   Supported versions currently range from 1.7.1 through 2.2.1; the default
 #'   is the newest tested release.
 #' @param python_version Python version constraint used when creating a new
-#'   environment. Meridian requires Python >= 3.11.
+#'   environment. Meridian's JAX dependency needs Python >= 3.11, and
+#'   TensorFlow does not yet publish wheels for Python 3.14.
 #' @param new_env If `TRUE`, any existing environment of the same name is
 #'   removed before installing. Defaults to `TRUE` only for the default
 #'   `"r-meridian"` environment.
@@ -39,23 +45,28 @@ meridian_max_version <- "2.2.1"
 #'
 #' @examples
 #' \dontrun{
-#' # Default CPU / TensorFlow install
+#' # Default CPU install of the newest tested Meridian release
 #' install_meridian()
+#'
+#' # A specific supported release, in its own environment
+#' install_meridian("r-meridian-1.7.1", meridian_version = "1.7.1")
 #'
 #' # GPU build
 #' install_meridian(gpu = TRUE)
 #'
-#' # Experimental JAX backend
-#' install_meridian(backend = "jax")
+#' # Force a backend instead of Meridian's default
+#' install_meridian(backend = "tensorflow")
 #' }
 install_meridian <- function(envname = "r-meridian",
                              ...,
-                             backend = c("tensorflow", "jax"),
+                             backend = NULL,
                              gpu = FALSE,
-                             meridian_version = "2.2.1",
-                             python_version = ">=3.11",
+                             meridian_version = meridian_default_version,
+                             python_version = ">=3.11,<3.14",
                              new_env = identical(envname, "r-meridian")) {
-  backend <- match.arg(backend)
+  if (!is.null(backend)) {
+    backend <- match.arg(backend, c("tensorflow", "jax"))
+  }
   validate_meridian_version(meridian_version)
   pkg <- meridian_pip_spec(
     backend = backend,
@@ -71,11 +82,6 @@ install_meridian <- function(envname = "r-meridian",
       numeric_version(python_floor) < "3.11") {
     cli::cli_abort("Meridian requires Python 3.11 or newer in this package.")
   }
-
-  # py_install() creates virtual environments but does not install Python
-  # itself. Reuse a compatible interpreter when reticulate can discover one;
-  # otherwise ask reticulate to install a managed Python.
-  python_minor <- paste0(python_floor, ":latest")
 
   if (isTRUE(new_env) && reticulate::virtualenv_exists(envname)) {
     reticulate::virtualenv_remove(envname, confirm = FALSE)
@@ -94,26 +100,9 @@ install_meridian <- function(envname = "r-meridian",
     if (!is.na(old_uv_cache)) Sys.setenv(UV_CACHE_DIR = old_uv_cache)
   }, add = TRUE)
 
-  python_config <- tryCatch(
-    reticulate::py_discover_config(),
-    error = function(e) NULL
-  )
-  if (is.null(python_config) || is.null(python_config$version) ||
-      python_config$version < numeric_version(python_floor)) {
-    tryCatch(
-      reticulate::install_python(version = python_minor, optimized = FALSE),
-      error = function(e) {
-        cli::cli_abort(
-          c(
-            "Could not install Python {.val {python_minor}}.",
-            "i" = "Meridian requires Python 3.11 or newer.",
-            "x" = conditionMessage(e)
-          ),
-          parent = e
-        )
-      }
-    )
-  }
+  # py_install() creates virtual environments but does not install Python
+  # itself, so make sure an interpreter satisfying `python_version` exists.
+  ensure_python_starter(python_version, python_floor)
 
   tryCatch(
     reticulate::py_install(
@@ -136,13 +125,50 @@ install_meridian <- function(envname = "r-meridian",
     }
   )
 
-  options(meridianR.virtualenv = envname, meridianR.backend = backend)
+  options(meridianR.virtualenv = envname)
+  if (!is.null(backend)) options(meridianR.backend = backend)
 
   cli::cli_alert_success("Installed {.val {pkg}} into virtualenv {.val {envname}}.")
   cli::cli_alert_info(
     "Restart R to use it, or call reticulate::use_virtualenv({.val {envname}}) first."
   )
   invisible(envname)
+}
+
+# Make sure reticulate can find a Python interpreter satisfying `constraint` to
+# seed the virtual environment. When none exists, provision one: prefer uv
+# (fast, prebuilt, already used by reticulate), falling back to pyenv via
+# reticulate::install_python() (which compiles from source).
+ensure_python_starter <- function(constraint, floor) {
+  if (!is.null(reticulate::virtualenv_starter(constraint))) {
+    return(invisible(TRUE))
+  }
+  cli::cli_alert_info(
+    "No Python satisfying {.val {constraint}} found; installing Python {floor}."
+  )
+  uv <- Sys.which("uv")
+  if (nzchar(uv)) {
+    status <- system2(uv, c("python", "install", floor))
+    if (identical(status, 0L) &&
+        !is.null(reticulate::virtualenv_starter(constraint))) {
+      return(invisible(TRUE))
+    }
+  }
+  tryCatch(
+    reticulate::install_python(version = paste0(floor, ":latest"), optimized = FALSE),
+    error = function(e) {
+      cli::cli_abort(
+        c(
+          "Could not install Python {.val {floor}}.",
+          "i" = "Meridian needs Python {.val {constraint}}.",
+          "i" = "Install a compatible Python (e.g. {.code uv python install {floor}}) and retry.",
+          "x" = conditionMessage(e)
+        ),
+        parent = e
+      )
+    }
+  )
+  invisible(TRUE)
 }
 
 validate_meridian_version <- function(version) {
@@ -160,25 +186,26 @@ validate_meridian_version <- function(version) {
   invisible(TRUE)
 }
 
-# Build the pip requirement string with the appropriate extras.
-meridian_pip_spec <- function(backend = "tensorflow", gpu = FALSE,
+# Build the pip requirement string with the appropriate extras. The `schema`
+# extra is always included: it provides Meridian's schema-based model
+# serializer used by save_model() / load_model().
+meridian_pip_spec <- function(backend = NULL, gpu = FALSE,
                               meridian_version = meridian_default_version) {
   extras <- character()
   if (isTRUE(gpu)) extras <- c(extras, "and-cuda")
   if (identical(backend, "jax")) extras <- c(extras, "jax")
-  if (length(extras)) {
-    sprintf(
-      "google-meridian[%s]==%s",
-      paste(extras, collapse = ","), meridian_version
-    )
-  } else {
-    sprintf("google-meridian==%s", meridian_version)
-  }
+  extras <- c(extras, "schema")
+  sprintf(
+    "google-meridian[%s]==%s",
+    paste(extras, collapse = ","), meridian_version
+  )
 }
 
 #' Select the Meridian compute backend
 #'
-#' Meridian can run on a TensorFlow (default) or an experimental JAX backend.
+#' Meridian can run on a TensorFlow or a JAX backend. Meridian 1.x defaults to
+#' TensorFlow; from Meridian 2.2, JAX is the default and TensorFlow is
+#' deprecated upstream.
 #' The backend is read from the `MERIDIAN_BACKEND` environment variable when the
 #' Meridian Python module is first imported, so for a reliable switch call
 #' `use_backend()` *before* any other meridianR function in a session. If

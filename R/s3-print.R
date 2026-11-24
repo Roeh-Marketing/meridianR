@@ -94,8 +94,11 @@ print.meridian_model_spec <- function(x, ...) {
     sprintf("hill_before_adstock: %s", get1("hill_before_adstock")),
     sprintf("adstock_decay_spec: %s", get1("adstock_decay_spec")),
     sprintf("saturation_spec: %s", get1("saturation_spec")),
-    if (!is.null(get1("paid_media_prior_type"))) {
-      sprintf("paid_media_prior_type: %s", get1("paid_media_prior_type"))
+    if (!is.null(get1("effective_media_prior_type"))) {
+      sprintf("media_prior_type: %s", get1("effective_media_prior_type"))
+    },
+    if (!is.null(get1("effective_rf_prior_type"))) {
+      sprintf("rf_prior_type: %s", get1("effective_rf_prior_type"))
     }
   ))
   cli::cli_text("{.strong <meridian_model_spec>}")

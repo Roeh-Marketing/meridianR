@@ -17,13 +17,14 @@ test_that("named_cols is NULL-safe and tags columns", {
 })
 
 test_that("meridian_pip_spec builds the right extras", {
-  expect_equal(meridian_pip_spec("tensorflow", FALSE), "google-meridian==2.2.1")
-  expect_equal(meridian_pip_spec("jax", FALSE), "google-meridian[jax]==2.2.1")
-  expect_equal(meridian_pip_spec("tensorflow", TRUE), "google-meridian[and-cuda]==2.2.1")
-  expect_equal(meridian_pip_spec("jax", TRUE), "google-meridian[and-cuda,jax]==2.2.1")
+  expect_equal(meridian_pip_spec(), "google-meridian[schema]==2.2.1")
+  expect_equal(meridian_pip_spec("tensorflow", FALSE), "google-meridian[schema]==2.2.1")
+  expect_equal(meridian_pip_spec("jax", FALSE), "google-meridian[jax,schema]==2.2.1")
+  expect_equal(meridian_pip_spec(NULL, TRUE), "google-meridian[and-cuda,schema]==2.2.1")
+  expect_equal(meridian_pip_spec("jax", TRUE), "google-meridian[and-cuda,jax,schema]==2.2.1")
   expect_equal(
-    meridian_pip_spec("tensorflow", FALSE, meridian_version = "2.1.0"),
-    "google-meridian==2.1.0"
+    meridian_pip_spec(meridian_version = "2.1.0"),
+    "google-meridian[schema]==2.1.0"
   )
 })
 
@@ -40,4 +41,22 @@ test_that("R-hat output column names are stable across Meridian versions", {
   new <- tibble::tibble(avg_r_hat = 1, max_r_hat = 1, percent_bad_r_hat = 1)
   expect_named(normalize_rhat_names(old), names(old))
   expect_named(normalize_rhat_names(new), names(old))
+})
+
+test_that("installed Meridian versions are classified against the tested window", {
+  expect_equal(meridian_version_status("2.2.1"), "supported")
+  expect_equal(meridian_version_status(meridian_min_version), "supported")
+  expect_equal(meridian_version_status("1.7.0"), "too_old")
+  expect_equal(meridian_version_status("2.3.0"), "untested")
+  expect_equal(meridian_version_status(NA_character_), "unknown")
+})
+
+test_that("model file extensions select the serialization format", {
+  expect_equal(model_file_format("m.binpb"), "schema")
+  expect_equal(model_file_format("dir/m.TXTPB"), "schema")
+  expect_equal(model_file_format("m.textproto"), "schema")
+  expect_equal(model_file_format("m.pkl"), "pickle")
+  expect_equal(model_file_format("m.joblib"), "pickle")
+  expect_equal(model_file_format("model"), "auto")
+  expect_equal(model_file_format("model.rds"), "auto")
 })

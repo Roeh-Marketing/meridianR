@@ -1,4 +1,4 @@
-# meridianR 0.0.0.9000
+# meridianR 0.0.0.9001
 
 Initial development release (data and modeling core).
 
@@ -6,6 +6,23 @@ Initial development release (data and modeling core).
   Meridian 2.2.1 release, with supported versions constrained to 1.7.1--2.2.1.
 * Added compatibility adapters for Meridian's renamed R-hat fields and
   backend-specific prior numeric precision.
+* Meridian's version is checked when it is first imported: meridianR warns
+  (class `meridianR_version_warning`) if the active release is outside the
+  tested window.
+* `install_meridian()` now bounds Python to 3.11--3.13 (TensorFlow has no 3.14
+  wheels yet) and, when no suitable interpreter exists, installs one with `uv`
+  before falling back to `reticulate::install_python()`.
+* `model_spec()` gains `media_prior_type`; `paid_media_prior_type` (deprecated
+  in Meridian) is kept for compatibility. `print()` on a model spec shows the
+  effective media and RF prior types.
+* `install_meridian()` and the on-load requirement now default to
+  Meridian's own backend (`backend = NULL`): JAX from Meridian 2.2,
+  TensorFlow before. Pass `backend = "tensorflow"` or `"jax"` to choose.
+* `install_meridian()` always installs the `google-meridian[schema]` extra.
+* `save_model()` / `load_model()` support Meridian's schema serializer, chosen
+  by file extension: `.binpb` / `.txtpb` / `.textproto` use the versioned
+  schema format, `.pkl` the legacy (deprecated) pickle format. Paths without a
+  recognized extension get `.binpb` when the schema extra is available.
 
 * First public scaffold of the package.
 * Python provisioning via `reticulate::py_require()` with an `install_meridian()`

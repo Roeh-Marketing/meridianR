@@ -13,9 +13,13 @@
 #'   default 8).
 #' @param unique_sigma_for_each_geo Estimate a separate residual standard
 #'   deviation per geo?
-#' @param paid_media_prior_type,rf_prior_type How the paid-media and
-#'   reach-and-frequency priors are parameterized, e.g. `"roi"`, `"mroi"`,
-#'   `"contribution"`, or `"coefficient"`.
+#' @param media_prior_type,rf_prior_type How the paid-media and
+#'   reach-and-frequency priors are parameterized: `"roi"` (Meridian default),
+#'   `"mroi"`, `"contribution"`, or `"coefficient"`. The matching prior in
+#'   [prior_distribution()] is then `roi_m`, `mroi_m`, `contribution_m`, or
+#'   `beta_m` (and the `_rf` equivalents).
+#' @param paid_media_prior_type Deprecated in Meridian; sets `media_prior_type`
+#'   and `rf_prior_type` together. Use those instead.
 #' @param knots Number of spline knots (a single integer) or a vector of knot
 #'   positions, controlling the time-varying baseline.
 #' @param baseline_geo Baseline geo, given as a geo name or an integer index.
@@ -26,7 +30,7 @@
 #' @param saturation_spec Saturation function: `"hill"` (default), or a named
 #'   list per channel.
 #' @param ... Further arguments forwarded to `ModelSpec`, such as
-#'   `media_prior_type`, `roi_calibration_period`, `organic_media_prior_type`,
+#'   `roi_calibration_period`, `organic_media_prior_type`,
 #'   `non_media_treatments_prior_type`, or `enable_aks`.
 #'
 #' @return A `meridian_model_spec` object.
@@ -46,13 +50,14 @@ model_spec <- function(prior = NULL,
                        hill_before_adstock = NULL,
                        max_lag = NULL,
                        unique_sigma_for_each_geo = NULL,
-                       paid_media_prior_type = NULL,
+                       media_prior_type = NULL,
                        rf_prior_type = NULL,
                        knots = NULL,
                        baseline_geo = NULL,
                        holdout_id = NULL,
                        adstock_decay_spec = NULL,
                        saturation_spec = NULL,
+                       paid_media_prior_type = NULL,
                        ...) {
   ensure_meridian()
 
@@ -69,8 +74,9 @@ model_spec <- function(prior = NULL,
     hill_before_adstock = hill_before_adstock,
     max_lag = as_py_int(max_lag),
     unique_sigma_for_each_geo = unique_sigma_for_each_geo,
-    paid_media_prior_type = paid_media_prior_type,
+    media_prior_type = media_prior_type,
     rf_prior_type = rf_prior_type,
+    paid_media_prior_type = paid_media_prior_type,
     knots = knots,
     baseline_geo = baseline_geo,
     holdout_id = holdout_id,

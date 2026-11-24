@@ -28,7 +28,10 @@
   # mutable inside .onLoad(). Python is NOT started here; the import is realized
   # on first access to `meridian$...`.
   meridian <<- reticulate::import("meridian", delay_load = list(
-    on_load = function() configure_py_warnings()
+    on_load = function() {
+      configure_py_warnings()
+      check_meridian_version()
+    }
   ))
 }
 

@@ -7,10 +7,10 @@
 install_meridian(
   envname = "r-meridian",
   ...,
-  backend = c("tensorflow", "jax"),
+  backend = NULL,
   gpu = FALSE,
-  meridian_version = "2.2.1",
-  python_version = ">=3.11",
+  meridian_version = meridian_default_version,
+  python_version = ">=3.11,<3.14",
   new_env = identical(envname, "r-meridian")
 )
 }
@@ -20,10 +20,11 @@ Defaults to \code{"r-meridian"}.}
 
 \item{...}{Additional arguments passed to \code{\link[reticulate:py_install]{reticulate::py_install()}}.}
 
-\item{backend}{Compute backend to provision: \code{"tensorflow"} (default) or the
-experimental \code{"jax"} backend. The JAX backend pulls in the
-\code{google-meridian[jax]} extra and is recorded as the default backend for
-future sessions (see \code{\link[=use_backend]{use_backend()}}).}
+\item{backend}{\code{NULL} (default) to use Meridian's own default backend --
+JAX from Meridian 2.2, TensorFlow before that -- or \code{"tensorflow"} /
+\code{"jax"} to choose one. \code{"jax"} also installs the \code{google-meridian[jax]}
+extra (needed on Meridian 1.x). An explicit choice applies to the current
+session; use \code{\link[=use_backend]{use_backend()}} at the start of later sessions.}
 
 \item{gpu}{Logical; if \code{TRUE}, install the CUDA GPU build
 (\code{google-meridian[and-cuda]}). Ignored on platforms without CUDA support.}
@@ -33,7 +34,8 @@ Supported versions currently range from 1.7.1 through 2.2.1; the default
 is the newest tested release.}
 
 \item{python_version}{Python version constraint used when creating a new
-environment. Meridian requires Python >= 3.11.}
+environment. Meridian's JAX dependency needs Python >= 3.11, and
+TensorFlow does not yet publish wheels for Python 3.14.}
 
 \item{new_env}{If \code{TRUE}, any existing environment of the same name is
 removed before installing. Defaults to \code{TRUE} only for the default
@@ -52,17 +54,24 @@ sessions.
 If you skip this step, meridianR still works: \code{\link[reticulate:py_require]{reticulate::py_require()}} (set
 up on load) will provision an ephemeral environment containing Meridian the
 first time Python is used. \code{install_meridian()} is recommended when you want
-a reusable environment, GPU support, or the experimental JAX backend.
+a reusable environment, a specific Meridian version, or GPU support.
+
+If no Python interpreter satisfying \code{python_version} is found, one is
+installed first -- with \code{uv} when it is on the \code{PATH}, otherwise with
+\code{\link[reticulate:install_python]{reticulate::install_python()}}.
 }
 \examples{
 \dontrun{
-# Default CPU / TensorFlow install
+# Default CPU install of the newest tested Meridian release
 install_meridian()
+
+# A specific supported release, in its own environment
+install_meridian("r-meridian-1.7.1", meridian_version = "1.7.1")
 
 # GPU build
 install_meridian(gpu = TRUE)
 
-# Experimental JAX backend
-install_meridian(backend = "jax")
+# Force a backend instead of Meridian's default
+install_meridian(backend = "tensorflow")
 }
 }
