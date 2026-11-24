@@ -4,7 +4,15 @@
 
 Initial development release (data and modeling core).
 
+- Python provisioning now requires Python \>= 3.11 and defaults to the
+  tested Meridian 2.2.1 release, with supported versions constrained to
+  1.7.1–2.2.1.
+
+- Added compatibility adapters for Meridian’s renamed R-hat fields and
+  backend-specific prior numeric precision.
+
 - First public scaffold of the package.
+
 - Python provisioning via
   [`reticulate::py_require()`](https://rstudio.github.io/reticulate/reference/py_require.html)
   with an
@@ -12,6 +20,7 @@ Initial development release (data and modeling core).
   helper;
   [`use_backend()`](https://roeh-marketing.github.io/meridianR/reference/use_backend.md)
   selects the TensorFlow or JAX backend.
+
 - Data interface:
   [`as_meridian_input()`](https://roeh-marketing.github.io/meridianR/reference/as_meridian_input.md),
   the fluent
@@ -23,10 +32,12 @@ Initial development release (data and modeling core).
   /
   [`data_frame_loader()`](https://roeh-marketing.github.io/meridianR/reference/csv_loader.md)
   bindings.
+
 - Model configuration:
   [`model_spec()`](https://roeh-marketing.github.io/meridianR/reference/model_spec.md),
   [`prior_distribution()`](https://roeh-marketing.github.io/meridianR/reference/prior_distribution.md),
   and the `prior_*()` distribution constructors.
+
 - Fitting:
   [`meridian_model()`](https://roeh-marketing.github.io/meridianR/reference/meridian_model.md),
   [`sample_prior()`](https://roeh-marketing.github.io/meridianR/reference/sample_prior.md),
@@ -35,9 +46,11 @@ Initial development release (data and modeling core).
   [`save_model()`](https://roeh-marketing.github.io/meridianR/reference/save_model.md)
   /
   [`load_model()`](https://roeh-marketing.github.io/meridianR/reference/save_model.md).
+
 - S3 [`print()`](https://rdrr.io/r/base/print.html) /
   [`summary()`](https://rdrr.io/r/base/summary.html) for input data,
   model specifications, and models.
+
 - Analysis layer:
   [`analyzer()`](https://roeh-marketing.github.io/meridianR/reference/analyzer.md)
   plus tidy accessors returning tibbles
@@ -48,6 +61,7 @@ Initial development release (data and modeling core).
   [`expected_vs_actual()`](https://roeh-marketing.github.io/meridianR/reference/expected_vs_actual.md),
   [`rhat_summary()`](https://roeh-marketing.github.io/meridianR/reference/rhat_summary.md),
   [`predictive_accuracy()`](https://roeh-marketing.github.io/meridianR/reference/predictive_accuracy.md)).
+
 - ggplot2-native plots
   ([`plot_model_fit()`](https://roeh-marketing.github.io/meridianR/reference/plot_model_fit.md),
   [`plot_roi()`](https://roeh-marketing.github.io/meridianR/reference/plot_roi.md),

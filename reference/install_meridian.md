@@ -13,7 +13,8 @@ install_meridian(
   ...,
   backend = c("tensorflow", "jax"),
   gpu = FALSE,
-  python_version = ">=3.10",
+  meridian_version = "2.2.1",
+  python_version = ">=3.11",
   new_env = identical(envname, "r-meridian")
 )
 ```
@@ -44,10 +45,16 @@ install_meridian(
   (`google-meridian[and-cuda]`). Ignored on platforms without CUDA
   support.
 
+- meridian_version:
+
+  Exact version of `google-meridian` to install. Supported versions
+  currently range from 1.7.1 through 2.2.1; the default is the newest
+  tested release.
+
 - python_version:
 
   Python version constraint used when creating a new environment.
-  Meridian requires Python \>= 3.10.
+  Meridian requires Python \>= 3.11.
 
 - new_env:
 

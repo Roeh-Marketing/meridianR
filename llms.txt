@@ -70,11 +70,18 @@ for the full walkthrough.
 
 ## Choosing the Python environment
 
-Meridian needs Python \>= 3.10, and meridianR installs it into the
-`r-meridian` virtual environment. reticulate can only bind **one**
-Python per R session, and an interpreter pinned by `RETICULATE_PYTHON`
-or your IDE takes precedence over meridianR’s default. If another Python
-is initialized first you will see:
+Meridian needs Python \>= 3.11, and
+[`install_meridian()`](https://roeh-marketing.github.io/meridianR/reference/install_meridian.md)
+provisions it together with tested Meridian releases in the range
+**1.7.1 through 2.2.1** in the `r-meridian` virtual environment. It
+installs 2.2.1 by default. The boundary versions have passed the
+integration suite; intermediate releases are included in the supported
+range but are not individually listed in the test matrix yet. You can
+choose an exact version in this range with `meridian_version`.
+reticulate can only bind **one** Python per R session, and an
+interpreter pinned by `RETICULATE_PYTHON` or your IDE takes precedence
+over meridianR’s default. If another Python is initialized first you
+will see:
 
     ERROR: The requested version of Python (...) cannot be used, as another version
     of Python (...) has already been initialized.
